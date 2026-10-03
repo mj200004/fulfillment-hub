@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fulfillment Hub</title>
+<style>
+:root{--ink:#111827;--mut:#5b6472;--line:#e3e6eb;--bg:#f5f6f8;--ok:#166534;--okbg:#dcfce7;--am:#92400e;--ambg:#fef3c7;--red:#991b1b;--redbg:#fee2e2;--rad:12px}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+h2,h3,h4{margin:0}
+.mut{color:var(--mut);font-size:14px}
+header.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:10px 16px}
+.brand{font-weight:800;font-size:18px}
+.seg{display:inline-flex;background:#eceff3;border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;padding:8px 20px;border-radius:999px;font-weight:700;color:var(--mut);min-height:42px}
+.seg button[aria-pressed=true]{background:var(--ink);color:#fff}
+.demo{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px;color:var(--mut)}
+.btn{border:1px solid #c9ced6;background:#fff;border-radius:10px;padding:8px 14px;font-weight:600;min-height:42px}
+.btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.sm{min-height:34px;padding:4px 10px;font-size:14px}
+main.office{padding:16px;max-width:1600px;margin:0 auto}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:var(--rad);padding:12px 14px;text-align:left}
+.tile b{display:block;font-size:30px;line-height:1.1}
+.tile span{font-size:14px;color:var(--mut)}
+.tile.am{background:var(--ambg);border-color:#f3d28a}.tile.am b{color:var(--am)}
+.tile.rd{background:var(--redbg);border-color:#f2b4b4}.tile.rd b{color:var(--red)}
+.tile.on{outline:3px solid var(--ink)}
+.sec{margin-top:18px}
+.sec>h2{font-size:17px;margin-bottom:8px}
+.alerts{display:grid;gap:6px}
+.alert{display:flex;gap:10px;align-items:center;text-align:left;width:100%;border:1px solid var(--line);border-left:5px solid;background:#fff;border-radius:10px;padding:8px 12px}
+.alert.l2{border-left-color:#dc2626}.alert.l1{border-left-color:#d97706}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.fchip{border:1px solid #c9ced6;background:#fff;border-radius:999px;padding:6px 14px;font-weight:600;min-height:38px}
+.fchip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(235px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px}
+.col{background:#eceff3;border-radius:var(--rad);padding:10px;min-height:120px}
+.col h3{font-size:14px;text-transform:uppercase;letter-spacing:.05em;display:flex;justify-content:space-between;margin-bottom:10px}
+.colbody{max-height:72vh;overflow-y:auto}
+.card{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-left:6px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.card:hover{box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.card.l0{border-left-color:#16a34a}.card.l1{border-left-color:#d97706}.card.l2{border-left-color:#dc2626}.card.sh{border-left-color:#9ca3af}
+.row{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.badge{background:var(--ink);color:#fff;font-size:11px;font-weight:800;letter-spacing:.05em;border-radius:6px;padding:2px 7px}
+.lv{font-size:12px;font-weight:700;border-radius:6px;padding:2px 7px}
+.lv0{background:var(--okbg);color:var(--ok)}.lv1{background:var(--ambg);color:var(--am)}.lv2{background:var(--redbg);color:var(--red)}
+.dl{font-weight:700;font-size:14px;margin-top:4px}.dl.am{color:var(--am)}.dl.red{color:var(--red)}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tag{font-size:12px;font-weight:700;border-radius:6px;padding:2px 7px;background:#eceff3}
+.tag.am{background:var(--ambg);color:var(--am)}.tag.red{background:var(--redbg);color:var(--red)}
+form.inl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+form.inl input[type=text]{flex:1;min-width:180px}
+input[type=text],select{border:1px solid #c9ced6;border-radius:10px;padding:8px 10px;min-height:42px;background:#fff}
+ul.list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.iss{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:4px;justify-items:start}
+.iss.done{opacity:.8}
+.chip{font-size:12px;font-weight:700;border-radius:6px;padding:2px 8px}.chip.ok{background:var(--okbg);color:var(--ok)}
+.lnk{border:0;background:none;padding:0;text-decoration:underline;font-weight:700}
+.ov{position:fixed;inset:0;background:rgba(17,24,39,.5);z-index:30;display:flex;justify-content:center;align-items:flex-start;padding:24px 12px;overflow-y:auto}
+.panel{background:#fff;border-radius:16px;width:100%;max-width:680px;padding:18px}
+.ph{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px}
+.panel h3{font-size:15px;margin:16px 0 6px}
+.line{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding:6px 0}
+.note{border-radius:8px;padding:6px 10px;margin:4px 0;font-weight:600;font-size:14px}
+.opt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.opt[aria-pressed=true]{border-color:var(--ink)}
+.opt:disabled{opacity:.5;cursor:not-allowed}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* Warehouse */
+.wh{max-width:560px;margin:0 auto;padding:12px 14px 120px}
+.task{background:#fff;border:2px solid var(--ink);border-radius:20px;padding:18px}
+.ttype{font-size:15px;letter-spacing:.1em;font-weight:800}
+.oid{color:var(--mut);font-size:18px;margin-top:2px}
+.banner{border-radius:12px;padding:10px 12px;font-weight:800;margin:12px 0;font-size:17px;border:2px solid var(--ink)}
+.banner.am{background:var(--ambg);color:var(--am);border-color:#d97706}
+.banner.rd{background:var(--redbg);color:var(--red);border-color:#dc2626}
+.big{font-size:26px;line-height:1.25;margin:12px 0}
+.bigbtn{width:100%;min-height:76px;font-size:23px;font-weight:800;border-radius:16px;border:0;background:var(--ink);color:#fff;margin-top:16px}
+.bigbtn.light{background:#fff;color:var(--red)}
+.route{display:grid;gap:8px;margin:12px 0}
+.route>div{border:2px solid var(--line);border-radius:14px;padding:12px;font-size:22px}
+.route small,.shelf small{display:block;font-size:13px;letter-spacing:.08em;color:var(--mut);font-weight:700}
+.items{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
+.items li{display:flex;gap:14px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:10px 12px}
+.shelf{font-size:36px;font-weight:800;min-width:84px;text-align:center}
+.nm{font-size:22px;font-weight:700}.sp{font-size:19px}.sk{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:19px}
+.prog{font-weight:700;color:var(--mut);margin-top:8px}
+.item{border:2px solid var(--ink);border-radius:14px;padding:12px;margin:8px 0}
+.q{font-size:20px;margin:14px 0 8px}
+.choices{display:grid;gap:10px}
+.choice{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:72px;border:2px solid #9aa3af;background:#fff;border-radius:14px;padding:10px 14px;text-align:left;font-size:17px}
+.scanf{margin-top:14px}.scanf label{font-weight:700;display:block;margin-bottom:6px}
+.scanrow{display:flex;gap:8px}.scanrow input{flex:1;font-size:20px;min-height:56px}.scanrow .btn{min-height:56px;font-size:18px}
+.lane{font-size:48px;font-weight:800;margin:6px 0}
+.next{margin:12px 4px;color:var(--mut)}
+.reportbar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 14px;z-index:45}
+.reportbar button{display:block;width:100%;max-width:560px;margin:0 auto;min-height:60px;border:2px solid var(--ink);background:#fff;border-radius:14px;font-size:20px;font-weight:800}
+.sheet{position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet>div{background:#fff;width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:18px 14px 22px}
+.sheet h3{font-size:22px;margin-bottom:10px}
+.sheet .bigbtn{margin-top:8px;min-height:64px;font-size:20px}
+.sheet .bigbtn.plain{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+.wrong{position:fixed;inset:0;background:#b91c1c;color:#fff;z-index:40;overflow-y:auto;padding:20px 16px 130px}
+.wx{max-width:560px;margin:0 auto}
+.wt{font-size:44px;font-weight:900;line-height:1}
+.ws{font-size:26px;font-weight:800;margin:6px 0 14px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp h4{font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.f{background:rgba(255,255,255,.12);border-radius:10px;padding:6px 10px;margin-bottom:6px}
+.f small{display:block;font-size:12px;opacity:.9}.f b{font-size:18px;word-break:break-word}
+.f.d{background:#fff;color:var(--red)}.f i{font-style:normal;font-size:12px;font-weight:700}
+#toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;z-index:70;display:none;max-width:90vw;text-align:center}
+@media (max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}.demo{margin-left:0}.cmp{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+'use strict';
+const MIN=60000;
+const STAGES=['Received','Processed','Picking','Packing','Staged','Shipped'];
+const LIMIT=[30,20,30,30,0,0];            // minutes allowed per stage (regular orders)
+const PRIO_FACTOR=0.5, AMBER_FRAC=0.75;   // priority orders get half the time; amber at 75% of limit
+const BUFFER=30, AMBER_SHIPBY=60;         // ship-by = pickup minus 30 min; amber when < 60 min left
+const ISSUE_TYPES=['Wrong item','Missing stock','Damaged item','Box misplaced','Courier missed pickup','Other'];
+const REPORT_TYPES=[['Wrong item','Wrong item'],['Item not on the shelf','Missing stock'],['Item is damaged','Damaged item'],["Can't find a box",'Box misplaced'],['Something else','Other']];
+
+const COURIERS=[
+ {id:'C1',name:'SwiftShip',cost:140,days:1,speed:'Next-day delivery',h:14,m:0,lane:'Lane 1'},
+ {id:'C2',name:'QuickBox',cost:95,days:2,speed:'2-day delivery',h:16,m:0,lane:'Lane 2'},
+ {id:'C3',name:'EcoPost',cost:60,days:4,speed:'4-day delivery',h:18,m:0,lane:'Lane 3'}
+];
+const CMAP={};COURIERS.forEach(c=>CMAP[c.id]=c);
+
+const COLORS={BLK:'Black',NVY:'Navy',WHT:'White',GRY:'Grey',CHR:'Charcoal',OLV:'Olive',RED:'Red',BLU:'Blue',TAN:'Tan'};
+const PRODUCTS=[
+ ['TEE','Classic Tee',['BLK-M','NVY-M','BLK-L','WHT-M']],
+ ['HOD','Zip Hoodie',['GRY-L','CHR-L','GRY-M']],
+ ['JNS','Slim Jeans',['BLU-32','BLU-34','BLK-32']],
+ ['CAP','Baseball Cap',['BLK-OS','NVY-OS']],
+ ['SOC','Sport Socks 3-pack',['WHT-M','WHT-L']],
+ ['BAG','Day Backpack',['BLK-OS','OLV-OS']],
+ ['BTL','Steel Bottle 750ml',['BLK-OS','BLU-OS']],
+ ['SHO','Runner Shoes',['BLK-9','BLK-10','WHT-9']],
+ ['JKT','Rain Jacket',['OLV-M','OLV-L']],
+ ['BLT','Leather Belt',['BLK-M','TAN-M']],
+ ['WLT','Slim Wallet',['BLK-OS','TAN-OS']],
+ ['SCF','Wool Scarf',['RED-OS','GRY-OS']],
+ ['GLV','Touch Gloves',['BLK-M','BLK-L']],
+ ['SHT','Oxford Shirt',['WHT-M','BLU-M','WHT-L']],
+ ['SHR','Chino Shorts',['TAN-32','OLV-32']],
+ ['BNI','Beanie',['BLK-OS','GRY-OS']],
+ ['TOW','Gym Towel',['GRY-OS','BLU-OS']],
+ ['PCH','Phone Pouch',['BLK-OS','RED-OS']]
+];
+const VL=[],V={};
+PRODUCTS.forEach(p=>p[2].forEach(x=>{const a=x.split('-');const v={sku:p[0]+'-'+x,code:p[0],name:p[1],color:COLORS[a[0]],size:a[1]==='OS'?'One size':a[1]};VL.push(v);V[v.sku]=v;}));
+const MAINLOCS=[];['A','B','C','D'].forEach(r=>[1,2,3,4].forEach(n=>MAINLOCS.push(r+n)));
+const WH2LOCS=[];['X','Y','Z'].forEach(r=>[1,2,3].forEach(n=>WH2LOCS.push(r+n)));
+
+// id, priority, courier index (-1 none), stage, minutes in stage, minutes since received, lines
+const SEED=[
+['1001',0,-1,0,8,8,'TEE-BLK-L:1'],
+['1002',1,-1,0,12,12,'SHO-BLK-10:1'],
+['1003',0,-1,0,25,25,'JNS-BLU-32:1,BLT-BLK-M:1'],
+['1004',0,-1,0,41,41,'CAP-NVY-OS:2'],
+['1005',0,-1,0,5,5,'SCF-RED-OS:1'],
+['1006',0,-1,0,15,15,'WLT-BLK-OS:1,PCH-BLK-OS:1'],
+['1007',1,1,1,6,40,'JKT-OLV-L:1,TEE-NVY-M:1'],   // (b) item only in warehouse 2 + look-alike
+['1008',0,2,1,6,30,'HOD-GRY-M:1'],
+['1009',0,1,1,9,35,'BAG-OLV-OS:1'],
+['1010',0,2,1,18,45,'SHT-BLU-M:1,SOC-WHT-L:1'],
+['1011',1,2,1,4,20,'BNI-BLK-OS:2'],
+['1012',0,1,1,11,38,'SHO-WHT-9:1,SOC-WHT-M:1'],  // (c) out of stock everywhere
+['1013',0,2,1,3,25,'TOW-BLU-OS:1'],
+['1014',0,2,2,12,50,'JNS-BLU-34:1'],
+['1015',1,1,2,9,30,'GLV-BLK-L:1,SCF-GRY-OS:1'],
+['1016',0,2,2,20,60,'PCH-RED-OS:1'],
+['1017',0,1,2,5,30,'SHR-OLV-32:1'],
+['1018',1,1,3,7,25,'TEE-BLK-M:1,HOD-GRY-L:1'],   // (a) priority near cutoff + (f) look-alikes
+['1019',0,2,3,70,130,'SHT-WHT-L:1'],            // (d) stuck in Packing
+['1020',0,2,3,10,40,'BTL-BLU-OS:2'],
+['1021',0,1,3,24,60,'BLT-TAN-M:1,WLT-TAN-OS:1'],
+['1022',1,2,3,3,30,'CAP-BLK-OS:1'],
+['1023',0,0,4,85,150,'SHR-TAN-32:1'],           // (e) staged, pickup missed
+['1024',0,1,4,20,70,'TOW-GRY-OS:2'],
+['1025',1,1,4,4,45,'BNI-GRY-OS:1'],
+['1026',0,2,4,35,90,'BAG-BLK-OS:1'],
+['1027',0,2,4,50,110,'BTL-BLK-OS:1'],
+['1028',1,0,5,95,300,'TEE-WHT-M:2'],
+['1029',0,0,5,110,320,'JNS-BLK-32:1'],
+['1030',1,1,5,40,180,'GLV-BLK-M:1'],
+['1031',0,2,5,130,350,'TOW-GRY-OS:1,TOW-BLU-OS:1'],
+['1032',0,0,5,75,260,'CAP-BLK-OS:1'],
+['1033',0,1,5,150,300,'HOD-CHR-L:1'],
+['1034',0,0,5,200,400,'SOC-WHT-M:3'],
+['1035',0,2,5,240,420,'SHT-WHT-M:1']
+];
+
+let S;
+const $app=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const now=()=>Date.now()+S.offset;
+const pad=n=>String(n).padStart(2,'0');
+const hhmm=t=>{const d=new Date(t);return pad(d.getHours())+':'+pad(d.getMinutes());};
+const sameDay=(a,b)=>new Date(a).toDateString()===new Date(b).toDateString();
+const pickupLabel=t=>(sameDay(t,now())?'':'tomorrow ')+hhmm(t);
+function fmtMin(m){m=Math.max(0,Math.round(m));if(m<60)return m+' min';return Math.floor(m/60)+' h '+pad(m%60)+' min';}
+const ago=t=>fmtMin((now()-t)/MIN)+' ago';
+function atTime(h,m){const d=new Date(now());d.setHours(h,m,0,0);return d.getTime();}
+function nextPickup(c){let p=atTime(c.h,c.m);if(p-BUFFER*MIN<=now())p+=24*60*MIN;return p;}
+const byId=id=>S.orders.find(o=>o.id===id);
+const cour=o=>o.courier?CMAP[o.courier]:null;
+const shipBy=o=>o.pickupAt?o.pickupAt-BUFFER*MIN:null;
+const pendingMoves=o=>S.moves.filter(m=>m.orderId===o.id&&!m.done);
+
+/* ---------- state ---------- */
+function newUI(view){return{view:view||'office',filter:'all',modal:null,mode:null,pick:null,
+ form:{orderId:'',type:ISSUE_TYPES[0],note:''},mform:{type:ISSUE_TYPES[0],note:''},iss:{status:'open',type:'all'},scan:'',report:false};}
+function init(view){
+ S={offset:0,stock:{},orders:[],moves:[],moveSeq:0,issues:[],issueSeq:0,lock:null,wrong:null,scrollTo:null,ui:newUI(view)};
+ const d=new Date();d.setHours(15,12,0,0);S.offset=d.getTime()-Date.now();   // demo clock starts at 15:12
+ VL.forEach((v,i)=>{S.stock[v.sku]={main:4+(i*3)%9,mainLoc:MAINLOCS[i%16],wh2:(i*5)%7,wh2Loc:WH2LOCS[i%9]};});
+ S.stock['JKT-OLV-L'].main=0;S.stock['JKT-OLV-L'].wh2=6;   // only in warehouse 2
+ S.stock['SHO-WHT-9'].main=0;S.stock['SHO-WHT-9'].wh2=0;   // nowhere
+ const t=now();
+ SEED.forEach(r=>{
+  const since=t-r[4]*MIN,created=t-r[5]*MIN,st=r[3],hist=[];
+  for(let k=0;k<=st;k++)hist.push({stage:k,at:k===st?since:created+(since-created)*k/st});
+  const c=r[2]>=0?COURIERS[r[2]]:null;
+  S.orders.push({id:'ORD-'+r[0],priority:!!r[1],courier:c?c.id:null,pickupAt:c?atTime(c.h,c.m):null,stage:st,stageSince:since,createdAt:st?created:since,
+   lines:r[6].split(',').map(x=>{const a=x.split(':');return{sku:a[0],qty:+a[1]};}),history:hist,blocked:null,checked:false,packed:{},packedDone:false});
+ });
+ S.issues.push({id:'I-'+(++S.issueSeq),orderId:'ORD-1029',type:'Damaged item',note:'Box corner crushed. Repacked.',by:'Warehouse',at:t-300*MIN,status:'resolved',resBy:'Office',resAt:t-270*MIN});
+ S.issues.push({id:'I-'+(++S.issueSeq),orderId:'ORD-1008',type:'Missing stock',note:'Zip Hoodie Grey M: shelf B3 says 6, only 4 found. Needs a recount.',by:'Warehouse',at:t-95*MIN,status:'open'});
+ normalize();
+}
+function normalize(){S.orders.filter(o=>o.stage===1&&!o.checked).forEach(stockCheck);}
+function go(o,stage){o.stage=stage;o.stageSince=now();o.history.push({stage:stage,at:o.stageSince});}
+function addIssue(x){S.issues.push({id:'I-'+(++S.issueSeq),orderId:x.orderId||null,type:x.type,note:x.note||'',by:x.by,at:now(),status:'open'});}
+
+/* ---------- stock check (runs when an order is Processed and again when picking starts) ---------- */
+function stockCheck(o){
+ const bad=[],need=[];
+ o.lines.forEach(l=>{const s=S.stock[l.sku],v=V[l.sku];
+  if(s.main>=l.qty)return;
+  if(s.main+s.wh2>=l.qty)need.push({sku:l.sku,qty:l.qty-s.main});
+  else bad.push(v.name+' '+v.color+' '+v.size+' ('+l.sku+')');});
+ o.checked=true;
+ if(bad.length){o.blocked='No stock anywhere: '+bad.join('; ');return 'blocked';}
+ o.blocked=null;let made=0;
+ need.forEach(n=>{if(!S.moves.some(m=>m.orderId===o.id&&m.sku===n.sku&&!m.done)){
+  S.moves.push({id:'M'+(++S.moveSeq),orderId:o.id,sku:n.sku,qty:n.qty,from:S.stock[n.sku].wh2Loc,to:S.stock[n.sku].mainLoc,done:false});made++;}});
+ return(made||pendingMoves(o).length)?'move':'ok';
+}
+
+/* ---------- status, colors, alerts ---------- */
+function status(o){
+ const t=now(),f={late:false,pickupMissed:false,pastShip:false,blocked:!!o.blocked},why=[];let level=0;
+ if(o.stage===5)return{level:0,why:why,f:f};
+ if(o.stage<4){
+  const mins=(t-o.stageSince)/MIN,lim=LIMIT[o.stage]*(o.priority?PRIO_FACTOR:1);
+  if(mins>lim){f.late=true;level=2;why.push('Delayed: '+fmtMin(mins)+' in '+STAGES[o.stage]+' (limit '+Math.round(lim)+' min)');}
+  else if(mins>=lim*AMBER_FRAC){level=1;why.push('Close to the time limit for '+STAGES[o.stage]);}
+  const sb=shipBy(o);
+  if(o.priority&&sb){const r=(sb-t)/MIN;
+   if(r<=0){f.pastShip=true;level=2;why.push('Past its ship-by time ('+hhmm(sb)+')');}
+   else if(r<AMBER_SHIPBY){level=Math.max(level,1);why.push('Ship-by '+hhmm(sb)+' is in '+fmtMin(r));}}
+ }else{
+  if(t>o.pickupAt){f.pickupMissed=true;level=2;why.push('Staged but courier pickup missed ('+cour(o).name+', '+hhmm(o.pickupAt)+')');}
+  else if((o.pickupAt-t)/MIN<30){level=1;why.push('Courier pickup in '+fmtMin((o.pickupAt-t)/MIN));}
+ }
+ if(o.blocked){level=2;why.push('Blocked: no stock');}
+ return{level:level,why:why,f:f};
+}
+function passes(o,f){
+ if(f==='all')return true;const s=status(o);
+ if(f==='priority')return o.priority;
+ if(f==='risk')return o.priority&&o.stage<4&&s.level>0;
+ if(f==='delayed')return s.f.late||s.f.pickupMissed;
+ if(f==='blocked')return !!o.blocked;
+ return true;
+}
+function cmpCard(a,b){
+ if(a.stage===5)return b.stageSince-a.stageSince;
+ if(a.priority!==b.priority)return b.priority-a.priority;
+ if(a.priority){const x=shipBy(a)===null?Infinity:shipBy(a),y=shipBy(b)===null?Infinity:shipBy(b);if(x!==y)return x-y;}
+ return a.stageSince-b.stageSince;
+}
+
+/* ---------- warehouse tasks ---------- */
+function tasks(){
+ const out=[];
+ S.orders.forEach(o=>{
+  if(o.stage===1){
+   if(o.blocked)return;
+   const mv=pendingMoves(o);
+   if(mv.length)mv.forEach(m=>out.push({key:'move:'+m.id,type:'move',o:o,m:m}));
+   else out.push({key:'pick:'+o.id,type:'pick',o:o});
+  }else if(o.stage===2)out.push({key:'pick:'+o.id,type:'pick',o:o});
+  else if(o.stage===3)out.push({key:(o.packedDone?'stage:':'pack:')+o.id,type:o.packedDone?'stage':'pack',o:o});
+ });
+ out.sort((a,b)=>{
+  if(a.o.priority!==b.o.priority)return b.o.priority-a.o.priority;
+  const x=shipBy(a.o)===null?Infinity:shipBy(a.o),y=shipBy(b.o)===null?Infinity:shipBy(b.o);
+  if(x!==y)return x-y;
+  if(a.o.createdAt!==b.o.createdAt)return a.o.createdAt-b.o.createdAt;
+  return a.key<b.key?-1:1;
+ });
+ return out;
+}
+function curTask(){
+ const l=tasks();let c=S.lock?l.find(t=>t.key===S.lock):null;
+ if(!c){S.lock=null;c=l[0]||null;}
+ return{c:c,l:l};
+}
+function nextUnit(o){for(const l of o.lines){if((o.packed[l.sku]||0)<l.qty)return l.sku;}return null;}
+function choices(sku){
+ const v=V[sku];
+ const sib=VL.filter(x=>x.code===v.code&&x.sku!==sku).sort((a,b)=>(a.size===v.size?0:1)-(b.size===v.size?0:1)).slice(0,2);
+ const other=VL[(VL.indexOf(v)+9)%VL.length];
+ const set=[v].concat(sib);if(set.indexOf(other)<0)set.push(other);
+ return set.sort((a,b)=>a.sku<b.sku?-1:1);
+}
+
+/* ---------- actions ---------- */
+let toastTimer;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.style.display='none';},2600);}
+function doScan(raw){
+ const t=curTask().c;if(!t||t.type!=='pack')return;
+ const exp=nextUnit(t.o),code=String(raw||'').trim().toUpperCase();if(!code||!exp)return;
+ S.lock=t.key;S.ui.scan='';
+ if(code===exp){t.o.packed[exp]=(t.o.packed[exp]||0)+1;toast('Correct item');}
+ else{S.wrong={orderId:t.o.id,exp:exp,got:code};
+  addIssue({orderId:t.o.id,type:'Wrong item',note:'Scanned '+code+' but order needs '+exp+'.',by:'Warehouse'});}
+}
+const A={
+ view(d){S.ui.view=d.v;S.ui.modal=null;S.ui.mode=null;S.ui.report=false;},
+ filter(d){S.ui.filter=S.ui.filter===d.f?'all':d.f;},
+ gotoIssues(){S.scrollTo='issues';},
+ openOrder(d){S.ui.modal=d.id;S.ui.mode=null;},
+ closeModal(){S.ui.modal=null;S.ui.mode=null;},
+ startProcess(){const o=byId(S.ui.modal);S.ui.mode='process';
+  const ok=COURIERS.filter(c=>!o.priority||sameDay(nextPickup(c),now()));
+  const best=o.priority?ok.slice().sort((a,b)=>a.days-b.days)[0]:COURIERS.slice().sort((a,b)=>a.cost-b.cost)[0];
+  S.ui.pick=best?best.id:null;},
+ pickCourier(d){S.ui.pick=d.id;},
+ cancelProcess(){S.ui.mode=null;},
+ confirmProcess(){const o=byId(S.ui.modal),c=CMAP[S.ui.pick];if(!o||!c)return;
+  o.courier=c.id;o.pickupAt=nextPickup(c);go(o,1);stockCheck(o);S.ui.mode=null;
+  toast(o.id+' processed. '+(o.blocked?'Blocked: no stock.':pendingMoves(o).length?'A Move stock task was created.':'Ready to pick.'));},
+ markShipped(d){const o=byId(d.id);if(o){go(o,5);toast(o.id+' marked as shipped.');S.ui.modal=null;}},
+ recheck(d){const o=byId(d.id);if(o){stockCheck(o);toast(o.blocked?'Still no stock.':'Stock found. Order is ready.');}},
+ resolve(d){const i=S.issues.find(x=>x.id===d.id);if(i){i.status='resolved';i.resBy='Office';i.resAt=now();}},
+ skip(){S.offset+=15*MIN;toast('Demo clock moved forward 15 min.');},
+ reset(){init(S.ui.view);toast('Demo data reset.');},
+ /* warehouse */
+ startPick(d){const o=byId(d.id);const r=stockCheck(o);
+  if(r!=='ok'){S.lock=null;toast(r==='blocked'?'No stock. The office was told.':'Stock moved. New task created.');return;}
+  go(o,2);S.lock='pick:'+o.id;},
+ finishPick(d){const o=byId(d.id);
+  o.lines.forEach(l=>{const s=S.stock[l.sku];s.main=Math.max(0,s.main-l.qty);});
+  o.packed={};o.packedDone=false;go(o,3);S.lock='pack:'+o.id;toast('Picked. Now pack it.');},
+ doMove(d){const m=S.moves.find(x=>x.id===d.id);if(!m)return;const s=S.stock[m.sku];
+  s.wh2=Math.max(0,s.wh2-m.qty);s.main+=m.qty;m.done=true;S.lock=null;normalize();toast('Stock moved.');},
+ scan(d){doScan(d.sku);},
+ dismissWrong(){S.wrong=null;},
+ finishPack(d){const o=byId(d.id);o.packedDone=true;S.lock='stage:'+o.id;toast('Packed.');},
+ finishStage(d){const o=byId(d.id);go(o,4);S.lock=null;toast('Box is staged. Well done.');},
+ report(){S.ui.report=true;},
+ closeReport(){S.ui.report=false;},
+ reportType(d){const t=curTask().c;addIssue({orderId:t?t.o.id:null,type:d.t,note:'',by:'Warehouse'});S.ui.report=false;toast('Problem reported. The office can see it.');}
+};
+
+/* ---------- views ---------- */
+function headerHTML(){
+ return '<header class="top"><div class="brand">Fulfillment Hub</div>'+
+ '<div class="seg" role="group" aria-label="Choose view"><button data-act="view" data-v="office" aria-pressed="'+(S.ui.view==='office')+'">Office</button><button data-act="view" data-v="warehouse" aria-pressed="'+(S.ui.view==='warehouse')+'">Warehouse</button></div>'+
+ '<div class="demo"><span title="Simulated clock so the sample data always looks live">Demo time <b id="clock">'+hhmm(now())+'</b></span><button class="btn" data-act="skip">+15 min</button><button class="btn" data-act="reset">Reset demo data</button></div></header>';
+}
+function cardHTML(o){
+ const s=status(o),c=cour(o),items=o.lines.reduce((a,l)=>a+l.qty,0),sb=shipBy(o),t=now();
+ let dl='';
+ if(o.priority&&o.stage<4){
+  if(sb){const r=(sb-t)/MIN;dl='<div class="dl '+(r<=0?'red':r<AMBER_SHIPBY?'am':'')+'">Ship by '+hhmm(sb)+' · '+(r>0?fmtMin(r)+' left':fmtMin(-r)+' overdue')+'</div>';}
+  else dl='<div class="dl">Ship-by: pick a courier</div>';
+ }
+ const tags=[];
+ if(o.blocked)tags.push('<span class="tag red">Blocked: no stock</span>');
+ else if(o.stage===1&&pendingMoves(o).length)tags.push('<span class="tag am">Move stock needed</span>');
+ if(s.f.late)tags.push('<span class="tag red">Delayed</span>');
+ if(s.f.pickupMissed)tags.push('<span class="tag red">Pickup missed</span>');
+ if(s.f.pastShip)tags.push('<span class="tag red">Past ship-by</span>');
+ const lv=o.stage===5?'':'<span class="lv lv'+s.level+'">'+['On track','Watch','Late'][s.level]+'</span>';
+ const inStage=o.stage===5?'Shipped '+ago(o.stageSince):'In '+STAGES[o.stage]+' '+fmtMin((t-o.stageSince)/MIN);
+ return '<button class="card '+(o.stage===5?'sh':'l'+s.level)+'" data-act="openOrder" data-id="'+o.id+'" aria-label="Order '+o.id+', '+inStage+'">'+
+  '<div class="row"><b>'+o.id+'</b>'+(o.priority?'<span class="badge">PRIORITY</span>':'')+'</div>'+
+  '<div class="mut">'+items+' item'+(items>1?'s':'')+' · '+(c?esc(c.name):'No courier yet')+'</div>'+dl+
+  '<div class="row" style="margin-top:4px"><span class="mut">'+inStage+'</span>'+lv+'</div>'+
+  (tags.length?'<div class="tags">'+tags.join('')+'</div>':'')+'</button>';
+}
+function issueHTML(i){
+ const open=i.status==='open';
+ return '<li class="iss'+(open?'':' done')+'"><div><b>'+i.id+'</b> · '+esc(i.type)+(i.orderId?' · <button class="lnk" data-act="openOrder" data-id="'+i.orderId+'">'+i.orderId+'</button>':'')+'</div>'+
+  (i.note?'<div>'+esc(i.note)+'</div>':'')+
+  '<div class="mut">Logged by '+i.by+' · '+ago(i.at)+(open?'':' · Resolved by '+i.resBy+' · '+ago(i.resAt))+'</div>'+
+  (open?'<button class="btn sm" data-act="resolve" data-id="'+i.id+'">Mark resolved</button>':'<span class="chip ok">Resolved</span>')+'</li>';
+}
+function typeOptions(sel){return ISSUE_TYPES.map(t=>'<option'+(t===sel?' selected':'')+'>'+t+'</option>').join('');}
+function officeHTML(){
+ let risk=0,del=0,blk=0;
+ S.orders.forEach(o=>{const s=status(o);if(o.priority&&o.stage<4&&s.level>0)risk++;if(s.f.late||s.f.pickupMissed)del++;if(o.blocked)blk++;});
+ const openIss=S.issues.filter(i=>i.status==='open').length,f=S.ui.filter;
+ const tile=(k,label,n,cls)=>'<button class="tile '+(n>0?cls:'')+(f===k?' on':'')+'" data-act="filter" data-f="'+k+'" aria-pressed="'+(f===k)+'"><b>'+n+'</b><span>'+label+'</span></button>';
+ let h='<main class="office"><div class="tiles">'+tile('risk','Priority orders at risk',risk,'am')+tile('delayed','Delayed orders',del,'rd')+tile('blocked','Blocked: no stock',blk,'rd')+
+  '<button class="tile '+(openIss>0?'am':'')+'" data-act="gotoIssues"><b>'+openIss+'</b><span>Open issues</span></button></div>';
+ const al=[];
+ S.orders.forEach(o=>{if(o.stage===5)return;const s=status(o);if(s.level===2||(s.level===1&&o.priority))al.push({o:o,s:s});});
+ al.sort((a,b)=>b.s.level-a.s.level||b.o.priority-a.o.priority);
+ h+='<section class="sec"><h2>Needs attention</h2>'+(al.length?'<div class="alerts">'+al.slice(0,8).map(a=>'<button class="alert l'+a.s.level+'" data-act="openOrder" data-id="'+a.o.id+'"><span class="lv lv'+a.s.level+'">'+(a.s.level===2?'LATE':'WATCH')+'</span><b>'+a.o.id+'</b><span>'+esc(a.s.why.join(' · '))+'</span></button>').join('')+(al.length>8?'<div class="mut">+ '+(al.length-8)+' more on the board</div>':'')+'</div>':'<div class="mut">Nothing needs attention right now.</div>')+'</section>';
+ const chip=(k,l)=>'<button class="fchip" data-act="filter" data-f="'+k+'" aria-pressed="'+(f===k)+'">'+l+'</button>';
+ h+='<section class="sec"><h2>Order board</h2><div class="chips">'+chip('all','All orders')+chip('priority','Priority')+chip('risk','At risk')+chip('delayed','Delayed')+chip('blocked','Blocked')+'</div><div class="board">';
+ STAGES.forEach((st,k)=>{
+  const list=S.orders.filter(o=>o.stage===k&&passes(o,f)).sort(cmpCard);
+  h+='<div class="col"><h3><span>'+st+'</span><span>'+list.length+'</span></h3><div class="colbody">'+(list.map(cardHTML).join('')||'<div class="mut">No orders</div>')+'</div></div>';
+ });
+ h+='</div></section>';
+ const F=S.ui.form,I=S.ui.iss;
+ const shown=S.issues.filter(i=>(I.status==='all'||i.status===I.status)&&(I.type==='all'||i.type===I.type)).sort((a,b)=>b.at-a.at);
+ h+='<section class="sec" id="issues"><h2>Issues</h2>'+
+  '<form class="inl" data-form="issue"><select data-bind="form.orderId" aria-label="Order"><option value="">No order</option>'+S.orders.map(o=>'<option value="'+o.id+'"'+(F.orderId===o.id?' selected':'')+'>'+o.id+'</option>').join('')+'</select>'+
+  '<select data-bind="form.type" aria-label="Issue type">'+typeOptions(F.type)+'</select><input type="text" data-bind="form.note" value="'+esc(F.note)+'" placeholder="What happened?" aria-label="Note"><button class="btn dark">Add issue</button></form>'+
+  '<div class="chips"><select data-bind="iss.status" data-rr="1" aria-label="Filter by status">'+['open','resolved','all'].map(x=>'<option value="'+x+'"'+(I.status===x?' selected':'')+'>'+x[0].toUpperCase()+x.slice(1)+'</option>').join('')+'</select>'+
+  '<select data-bind="iss.type" data-rr="1" aria-label="Filter by type"><option value="all">All types</option>'+ISSUE_TYPES.map(t=>'<option'+(I.type===t?' selected':'')+'>'+t+'</option>').join('')+'</select></div>'+
+  '<ul class="list">'+(shown.map(issueHTML).join('')||'<li class="mut">No issues here.</li>')+'</ul></section></main>';
+ return h;
+}
+function lineInfo(o,l){
+ const s=S.stock[l.sku],v=V[l.sku];let st='';
+ if(o.stage<=2){
+  if(s.main>=l.qty)st='In main warehouse, shelf '+s.mainLoc+' ('+s.main+' on hand)';
+  else if(s.main+s.wh2>=l.qty)st='Only '+s.main+' in main. '+s.wh2+' in Warehouse 2 (shelf '+s.wh2Loc+'). Move needed.';
+  else st='No stock anywhere';
+ }
+ return '<div class="line"><div><b>'+l.qty+' × '+esc(v.name)+'</b><div class="mut">'+v.color+' · '+v.size+' · '+v.sku+'</div></div><div class="mut" style="text-align:right;max-width:230px">'+st+'</div></div>';
+}
+function modalHTML(){
+ if(S.ui.view!=='office'||!S.ui.modal)return '';
+ const o=byId(S.ui.modal);if(!o)return '';
+ const s=status(o),c=cour(o),sb=shipBy(o),t=now();
+ let h='<div class="ov"><div class="panel" role="dialog" aria-modal="true" aria-label="Order '+o.id+'"><div class="ph"><div><h2>'+o.id+' '+(o.priority?'<span class="badge">PRIORITY</span>':'')+'</h2><div class="mut">'+STAGES[o.stage]+' · '+(o.stage===5?'shipped '+ago(o.stageSince):'in this stage '+fmtMin((t-o.stageSince)/MIN))+'</div></div><button class="btn" data-act="closeModal">Close</button></div>';
+ s.why.forEach(w=>{h+='<div class="note lv'+s.level+'">'+esc(w)+'</div>';});
+ if(o.blocked)h+='<div class="note lv2">'+esc(o.blocked)+'</div>';
+ h+='<h3>Items</h3>'+o.lines.map(l=>lineInfo(o,l)).join('');
+ h+='<h3>Courier</h3>';
+ if(c)h+='<div>'+esc(c.name)+' · ₹'+c.cost+' · '+c.speed+'<br>Pickup '+pickupLabel(o.pickupAt)+(o.priority&&sb?' · Ship-by '+hhmm(sb):'')+'</div>';
+ else h+='<div class="mut">Not chosen yet.</div>';
+ h+='<h3>Timeline</h3>'+o.history.map(x=>'<div class="line"><span>'+STAGES[x.stage]+'</span><span class="mut">'+hhmm(x.at)+' · '+ago(x.at)+'</span></div>').join('');
+ const oi=S.issues.filter(i=>i.orderId===o.id).sort((a,b)=>b.at-a.at);
+ h+='<h3>Issues</h3>'+(oi.length?'<ul class="list">'+oi.map(issueHTML).join('')+'</ul>':'<div class="mut">None for this order.</div>');
+ h+='<form class="inl" data-form="mini" style="margin-top:8px"><select data-bind="mform.type" aria-label="Issue type">'+typeOptions(S.ui.mform.type)+'</select><input type="text" data-bind="mform.note" value="'+esc(S.ui.mform.note)+'" placeholder="Short note" aria-label="Note"><button class="btn">Log issue</button></form>';
+ if(S.ui.mode==='process'&&o.stage===0){
+  h+='<h3>Choose a courier</h3>';
+  COURIERS.forEach(x=>{
+   const p=nextPickup(x),today=sameDay(p,t),dis=o.priority&&!today;
+   h+='<button class="opt" data-act="pickCourier" data-id="'+x.id+'" aria-pressed="'+(S.ui.pick===x.id)+'"'+(dis?' disabled':'')+'><b>'+x.name+'</b> · ₹'+x.cost+' · '+x.speed+'<br><span class="mut">Pickup '+pickupLabel(p)+(o.priority?(dis?' · too late for today':' · ship-by '+hhmm(p-BUFFER*MIN)):'')+'</span></button>';
+  });
+  h+='<div class="acts"><button class="btn dark" data-act="confirmProcess"'+(S.ui.pick?'':' disabled')+'>Mark as processed</button><button class="btn" data-act="cancelProcess">Cancel</button></div>';
+ }else{
+  h+='<div class="acts">';
+  if(o.stage===0)h+='<button class="btn dark" data-act="startProcess">Process order…</button>';
+  if(o.blocked)h+='<button class="btn" data-act="recheck" data-id="'+o.id+'">Re-check stock</button>';
+  if(o.stage===4)h+='<button class="btn dark" data-act="markShipped" data-id="'+o.id+'">Courier collected: mark Shipped</button>';
+  h+='</div>';
+ }
+ return h+'</div></div>';
+}
+function banner(o){
+ if(!o.priority)return '';
+ const sb=shipBy(o);if(!sb)return '<div class="banner">PRIORITY</div>';
+ const r=(sb-now())/MIN;
+ return '<div class="banner '+(r<=0?'rd':r<AMBER_SHIPBY?'am':'')+'">PRIORITY · ship by '+hhmm(sb)+' · '+(r>0?fmtMin(r)+' left':fmtMin(-r)+' late')+'</div>';
+}
+function packBody(o){
+ const units=o.lines.reduce((a,l)=>a+l.qty,0),done=o.lines.reduce((a,l)=>a+(o.packed[l.sku]||0),0),nx=nextUnit(o);
+ if(!nx)return '<p class="big">All '+units+' item'+(units>1?'s':'')+' checked.</p><p>Close the box and stick the label on.</p><button class="bigbtn" data-act="finishPack" data-id="'+o.id+'">Box is packed, label is on</button>';
+ const v=V[nx];
+ return '<div class="prog">Item '+(done+1)+' of '+units+'</div>'+
+  '<div class="item"><div class="nm">'+esc(v.name)+'</div><div class="sp">'+v.color+' · size '+v.size+'</div><div class="sk">'+v.sku+'</div></div>'+
+  '<h3 class="q">Tap the code on the item in your hand</h3><div class="choices">'+
+  choices(nx).map(c=>'<button class="choice" data-act="scan" data-sku="'+c.sku+'"><span class="sk">'+c.sku+'</span><span>'+esc(c.name)+' · '+c.color+' · '+c.size+'</span></button>').join('')+'</div>'+
+  '<form class="scanf" data-form="scan"><label for="scanin">Or scan / type the code</label><div class="scanrow"><input id="scanin" type="text" data-bind="scan" value="'+esc(S.ui.scan)+'" autocomplete="off" autocapitalize="characters" placeholder="Scan or type code"><button class="btn dark">Check</button></div></form>';
+}
+function taskHTML(t,l){
+ const o=t.o,names={move:'MOVE STOCK',pick:'PICK',pack:'PACK',stage:'STAGE'};
+ let h='<section class="task"><div class="ttype">'+names[t.type]+'</div><div class="oid">Order '+o.id+'</div>'+banner(o);
+ if(t.type==='move'){
+  const v=V[t.m.sku];
+  h+='<p class="big">Move <b>'+t.m.qty+' ×</b> '+esc(v.name)+', '+v.color+', '+v.size+'</p><div class="route"><div><small>TAKE FROM</small>Warehouse 2 · shelf <b>'+t.m.from+'</b></div><div><small>PUT IN</small>Main warehouse · shelf <b>'+t.m.to+'</b></div></div><button class="bigbtn" data-act="doMove" data-id="'+t.m.id+'">Done, I moved it</button>';
+ }else if(t.type==='pick'){
+  const rows=o.lines.slice().sort((a,b)=>S.stock[a.sku].mainLoc<S.stock[b.sku].mainLoc?-1:1).map(x=>{const v=V[x.sku];
+   return '<li><div class="shelf"><small>SHELF</small>'+S.stock[x.sku].mainLoc+'</div><div><div class="nm"><b>'+x.qty+' ×</b> '+esc(v.name)+'</div><div class="sp">'+v.color+' · '+v.size+'</div><div class="sk">'+v.sku+'</div></div></li>';}).join('');
+  h+='<p class="big">Collect these items</p><ul class="items">'+rows+'</ul>'+
+   (o.stage===1?'<button class="bigbtn" data-act="startPick" data-id="'+o.id+'">Start picking</button>':'<button class="bigbtn" data-act="finishPick" data-id="'+o.id+'">I have everything</button>');
+ }else if(t.type==='pack'){
+  h+=packBody(o);
+ }else{
+  const c=cour(o);
+  h+='<p class="big">Put the box here:</p><div class="lane">'+c.lane+'</div><p class="big" style="margin-top:0">'+esc(c.name)+'<br><span class="mut" style="font-size:18px">Courier comes at '+pickupLabel(o.pickupAt)+'</span></p><button class="bigbtn" data-act="finishStage" data-id="'+o.id+'">Box is on the lane</button>';
+ }
+ h+='</section>';
+ const nx=l.find(x=>x.key!==t.key);
+ h+='<div class="next">'+l.length+' task'+(l.length>1?'s':'')+' waiting'+(nx?' · Up next: '+({move:'Move stock',pick:'Pick',pack:'Pack',stage:'Stage'})[nx.type]+' for '+nx.o.id:'')+'</div>';
+ return h;
+}
+function fld(label,val,diff){return '<div class="f'+(diff?' d':'')+'"><small>'+label+'</small><b>'+esc(val)+'</b>'+(diff?' <i>DIFFERENT</i>':'')+'</div>';}
+function side(v,o,raw,isGot){
+ if(!v)return fld('Item','Unknown code',true)+fld('Code',raw,true);
+ const d=k=>o?v[k]!==o[k]:false;
+ return fld('Item',v.name,d('name'))+fld('Color',v.color,d('color'))+fld('Size',v.size,d('size'))+fld('Code',v.sku,true);
+}
+function wrongHTML(){
+ const w=S.wrong,e=V[w.exp],g=V[w.got];
+ return '<div class="wrong" role="alertdialog" aria-modal="true" aria-label="Wrong item. Stop."><div class="wx"><div class="wt">WRONG ITEM</div><div class="ws">STOP. Do not pack it.</div>'+
+  '<div class="cmp"><div><h4>Expected</h4>'+side(e,g,'',false)+'</div><div><h4>You scanned</h4>'+side(g,e,w.got,true)+'</div></div>'+
+  '<p>The office has been told. Put the item back and find the right one.</p><button class="bigbtn light" data-act="dismissWrong">Put it back and try again</button></div></div>';
+}
+function warehouseHTML(){
+ const r=curTask(),c=r.c;
+ let h='<main class="wh">';
+ if(!c){const nb=S.orders.filter(o=>o.blocked).length;
+  h+='<section class="task"><div class="ttype">NO TASKS</div><p class="big">Nothing to do right now.</p><p class="mut">'+(nb?nb+' order'+(nb>1?'s are':' is')+' waiting for the office (no stock).':'Take a short break.')+'</p></section>';}
+ else h+=taskHTML(c,r.l);
+ h+='</main><div class="reportbar"><button data-act="report">Report a problem</button></div>';
+ if(S.wrong)h+=wrongHTML();
+ if(S.ui.report){
+  h+='<div class="sheet"><div role="dialog" aria-modal="true" aria-label="Report a problem"><h3>What is the problem?</h3>'+(c?'<p class="mut">It will be linked to '+c.o.id+'.</p>':'')+
+   REPORT_TYPES.map(x=>'<button class="bigbtn" data-act="reportType" data-t="'+x[1]+'">'+x[0]+'</button>').join('')+'<button class="bigbtn plain" data-act="closeReport">Cancel</button></div></div>';
+ }
+ return h;
+}
+function render(){
+ const bd=document.querySelector('.board'),sl=bd?bd.scrollLeft:0,y=window.scrollY;
+ $app.innerHTML=headerHTML()+(S.ui.view==='office'?officeHTML()+modalHTML():warehouseHTML());
+ const b2=document.querySelector('.board');if(b2)b2.scrollLeft=sl;
+ window.scrollTo(0,y);
+ if(S.scrollTo){const el=document.getElementById(S.scrollTo);if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth'});S.scrollTo=null;}
+}
+
+/* ---------- events ---------- */
+function bind(el){
+ const k=el.dataset&&el.dataset.bind;if(!k)return;
+ const p=k.split('.');if(p.length===1)S.ui[p[0]]=el.value;else S.ui[p[0]][p[1]]=el.value;
+}
+document.addEventListener('click',e=>{
+ if(e.target.classList&&e.target.classList.contains('ov')){S.ui.modal=null;S.ui.mode=null;render();return;}
+ const b=e.target.closest('[data-act]');if(!b)return;
+ const f=A[b.dataset.act];if(!f)return;
+ f(b.dataset);render();
+});
+document.addEventListener('input',e=>bind(e.target));
+document.addEventListener('change',e=>{bind(e.target);if(e.target.dataset&&e.target.dataset.rr)render();});
+document.addEventListener('submit',e=>{
+ e.preventDefault();const k=e.target.dataset.form;
+ if(k==='issue'){const F=S.ui.form;addIssue({orderId:F.orderId,type:F.type,note:F.note.trim(),by:'Office'});F.note='';toast('Issue added.');}
+ else if(k==='mini'){const o=byId(S.ui.modal),M=S.ui.mform;addIssue({orderId:o?o.id:null,type:M.type,note:M.note.trim(),by:'Office'});M.note='';toast('Issue added.');}
+ else if(k==='scan'){const inp=e.target.querySelector('input');doScan(inp?inp.value:S.ui.scan);}
+ render();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(S.ui.modal||S.ui.report)){S.ui.modal=null;S.ui.mode=null;S.ui.report=false;render();}});
+setInterval(()=>{
+ const c=document.getElementById('clock');if(c)c.textContent=hhmm(now());
+ const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;
+ render();
+},15000);
+
+init('office');
+render();
+})();
+</script>
+</body>
+</html>
