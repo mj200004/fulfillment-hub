@@ -5,7 +5,6 @@ A small web app that replaces XYZ's spreadsheets and printed papers. One file, n
 - **Office view:** order board, alerts, priority deadlines, issues list.
 - **Warehouse view:** one big task at a time for phone or tablet.
 
-![Office view: summary tiles, needs-attention list and the order board](screenshots/01-office-overview.png)
 
 > **About the screenshots.** They were taken after I pressed "+15 min" a few times (demo time 16:04 to 16:06), so more orders show as late than at the start. The walkthrough numbers below describe the **start state (15:12)**.
 
@@ -48,33 +47,32 @@ The four tiles answer "what is on fire?" straight away. "Needs attention" lists 
 
 Scrolling down shows the rest of the board and the Issues panel, where anyone can log, filter and resolve a problem.
 
-![Order board and issues](screenshots/02-office-board-and-issues.png)
+<img width="1400" height="711" alt="02-office-board-and-issues" src="https://github.com/user-attachments/assets/77636fc9-7f1f-4030-a06f-7a115a87999e" />
 
 After a problem is reported from the Warehouse (or added here), the "Open issues" tile goes up and the issue appears in the list.
 
-![Open issues tile updated](screenshots/03-office-open-issues.png)
+<img width="1400" height="675" alt="03-office-open-issues" src="https://github.com/user-attachments/assets/516cbf31-7c11-4318-9653-09f5d7beb8ae" />
 
 ### Warehouse view
 
 One task at a time, big shelf codes, plain words. This is a Pick task: shelf first, then item.
 
-![Pick task](screenshots/04-warehouse-pick.png)
+<img width="1400" height="662" alt="04-warehouse-pick" src="https://github.com/user-attachments/assets/8ab5cfee-3166-4573-83a0-36296c89e384" />
 
 At packing, the worker taps (or types) the code on the item in their hand. Look-alike variants are listed together on purpose.
 
-![Pack task](screenshots/05-warehouse-pack.png)
+<img width="1400" height="674" alt="05-warehouse-pack" src="https://github.com/user-attachments/assets/452cb312-b207-4556-9eda-aeb7779f70bb" />
 
 If the code is wrong (here Black M instead of Navy M), the whole screen turns red, shows Expected vs. You scanned, and an issue is logged for the office.
 
-![Wrong item stop screen](screenshots/06-wrong-item-stop.png)
+<img width="1400" height="696" alt="06-wrong-item-stop" src="https://github.com/user-attachments/assets/c38f2d7b-20e3-49db-9b1a-d1968a71bb09" />
 
 With the right codes, the order moves on to the final packing step.
 
-![All items checked](screenshots/07-pack-complete.png)
+<img width="1400" height="670" alt="07-pack-complete" src="https://github.com/user-attachments/assets/20490286-7153-46ce-abf0-43b64fff76ce" />
 
 Then the worker is told exactly where to put the box and when the courier comes.
-
-![Stage task](screenshots/08-stage-lane.png)
+<img width="1400" height="677" alt="08-stage-lane" src="https://github.com/user-attachments/assets/8149e823-023b-491d-bfe0-ba6798966180" />
 
 ## Demo walkthrough
 
